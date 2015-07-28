@@ -9,6 +9,8 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
+import com.badlogic.gdx.math.Vector2;
+import com.litleman.gballs.ball.Ball;
 import com.litleman.gballs.input.Controls;
 
 public class GBalls extends ApplicationAdapter {
@@ -16,9 +18,16 @@ public class GBalls extends ApplicationAdapter {
 	SpriteBatch batch;
 	InputProcessor inputProcessor;
 	BitmapFont defaultFont;
+
+	public boolean play;
+	public Vector2 touch;
+
+	Ball ball;
+	//Level currentLevel;
 	
 	@Override
 	public void create () {
+		play = false;
 		batch = new SpriteBatch();
 		defaultFont = new BitmapFont();
 
@@ -44,9 +53,24 @@ public class GBalls extends ApplicationAdapter {
 	public void render () {
 		Gdx.gl.glClearColor(1, 1, 1, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		if(play) {
+			updateEvents();
+			updateNPC();
+			ball.update();
+
+			collisionCheck();
+		}else{
+			updateMenu();
+		}
 
 		batch.setProjectionMatrix(camera.combined);
 		batch.begin();
+		if (play) {
+			//currentLevel.draw(Gdx.gl, batch);
+			ball.draw(Gdx.gl, batch);
+		}else{
+
+		}
 			defaultFont.draw(batch, Gdx.input.getX() + " : " + Gdx.input.getY(), 100, 100);
 		batch.end();
 	}
@@ -57,5 +81,22 @@ public class GBalls extends ApplicationAdapter {
 
 	@Override
 	public void resume () {
+	}
+
+
+	private void updateEvents(){
+
+	}
+
+	private void updateNPC(){
+
+	}
+
+	private boolean collisionCheck(){
+		return false;
+	}
+
+	private void updateMenu(){
+
 	}
 }
