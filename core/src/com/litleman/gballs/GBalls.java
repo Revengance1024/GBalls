@@ -9,31 +9,32 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.litleman.gballs.ball.Ball;
 import com.litleman.gballs.input.Controls;
 
 public class GBalls extends ApplicationAdapter {
-	public static GBalls game;
+	private static OrthographicCamera camera;
+	private static SpriteBatch batch;
+	private static ShapeRenderer shapes;
+	private static InputProcessor inputProcessor;
+	private static BitmapFont defaultFont;
 
-	OrthographicCamera camera;
-	SpriteBatch batch;
-	InputProcessor inputProcessor;
-	BitmapFont defaultFont;
+	private static boolean play;
+	private static Vector2 touch;
+	public static boolean isTouched = false;
 
-	boolean play;
-	Vector2 touch;
+	private static int screenWidth;
+	private static int screenHeight;
 
-	Ball ball;
-	//Level currentLevel;
+	private static Ball ball;
+	//private static Level currentLevel;
 
-	public GBalls(){}
-	
+	private static Texture defaultBallTexture;
 	@Override
 	public void create () {
-		game = new GBalls();
-
-		play = false;
+		play = true;
 		batch = new SpriteBatch();
 		defaultFont = new BitmapFont();
 
@@ -43,6 +44,16 @@ public class GBalls extends ApplicationAdapter {
 		inputProcessor = new Controls();
 		Gdx.input.setInputProcessor(inputProcessor);
 
+		screenWidth = Gdx.graphics.getWidth();
+		screenHeight = Gdx.graphics.getHeight();
+
+
+		///FOR TESTING ONLY
+		shapes = new ShapeRenderer();
+		defaultBallTexture = new Texture(Gdx.files.internal("ball_base_256x256.png"));
+		ball = new Ball(100, 100, defaultBallTexture);
+		touch = new Vector2(0, 0);
+		///END TESTING
 	}
 
 	@Override
@@ -57,28 +68,45 @@ public class GBalls extends ApplicationAdapter {
 
 	@Override
 	public void render () {
-		Gdx.gl.glClearColor(1, 1, 1, 1);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		try {
+			Thread.sleep((long) (1000 / 30 - Gdx.graphics.getDeltaTime()));
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+
 		if(play) {
 			updateEvents();
-			updateNPC();
 			ball.update();
+			updateNPC();
 
 			collisionCheck();
 		}else{
 			updateMenu();
 		}
 
+		Gdx.gl.glClearColor(1, 1, 1, 1);
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+
 		batch.setProjectionMatrix(camera.combined);
 		batch.begin();
-		if (play) {
-			//currentLevel.draw(Gdx.gl, batch);
-			ball.draw(Gdx.gl, batch);
-		}else{
+			if (play) {
+				ball.draw(Gdx.gl, batch);
+				//currentLevel.draw(Gdx.gl, batch);
+			}else{
 
-		}
-			defaultFont.draw(batch, Gdx.input.getX() + " : " + Gdx.input.getY(), 100, 100);
+			}
 		batch.end();
+
+		if(isTouched) {
+			shapes.setProjectionMatrix(camera.combined);
+			shapes.begin(ShapeRenderer.ShapeType.Line);
+				shapes.setColor(0, 0, 0, 1);
+				shapes.line(touch.x, touch.y, Gdx.input.getX(), screenHeight-Gdx.input.getY());
+			shapes.end();
+		}
+		camera.update();
+		super.render();
 	}
 
 	@Override
@@ -90,19 +118,44 @@ public class GBalls extends ApplicationAdapter {
 	}
 
 
-	private void updateEvents(){
+	private static void updateEvents(){
 
 	}
 
-	private void updateNPC(){
+	private static void updateNPC(){
 
 	}
 
-	private boolean collisionCheck(){
+	private static boolean collisionCheck(){
 		return false;
 	}
 
-	private void updateMenu(){
+	private static void updateMenu(){
 
 	}
+
+	public static boolean isPlay(){
+		return play;
+	}
+
+	public static void setTouch(float x, float y){
+		touch.set(x, y);
+	}
+
+	public static Vector2 getTouch(){
+		return touch;
+	}
+
+	public static void ballInteract(float x, float y){
+		ball.interact(x, y);
+	}
+
+	public static int getScreenWidth(){
+		return screenWidth;
+	}
+
+	public static int getScreenHeight(){
+		return screenHeight;
+	}
+
 }

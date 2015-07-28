@@ -10,13 +10,16 @@ public class Controls implements InputProcessor{
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        GBalls.touch
+        GBalls.setTouch(screenX, GBalls.getScreenHeight()-screenY);
+        GBalls.isTouched = true;
         return true;
     }
 
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-        return false;
+        GBalls.ballInteract(GBalls.getTouch().x - screenX, GBalls.getTouch().y - (GBalls.getScreenHeight()-screenY));
+        GBalls.isTouched = false;
+        return true;
     }
 
     @Override
