@@ -13,12 +13,12 @@ public abstract class Tile {
     protected float hardness = -1.0f;       //(-1 indestructible)
     protected float bounce = 1.0f;
 
-    protected Wall wallTop;
-    protected Wall wallBottom;
-    protected Wall wallLeft;
-    protected Wall wallRight;
+    //protected Wall wallTop;
+    //protected Wall wallBottom;
+    //protected Wall wallLeft;
+    //protected Wall wallRight;
 
-    public Tile(String id, ){
+    public Tile(String id){
 
     }
 
