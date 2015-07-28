@@ -14,19 +14,25 @@ import com.litleman.gballs.ball.Ball;
 import com.litleman.gballs.input.Controls;
 
 public class GBalls extends ApplicationAdapter {
+	public static GBalls game;
+
 	OrthographicCamera camera;
 	SpriteBatch batch;
 	InputProcessor inputProcessor;
 	BitmapFont defaultFont;
 
-	public boolean play;
-	public Vector2 touch;
+	boolean play;
+	Vector2 touch;
 
 	Ball ball;
 	//Level currentLevel;
+
+	public GBalls(){}
 	
 	@Override
 	public void create () {
+		game = new GBalls();
+
 		play = false;
 		batch = new SpriteBatch();
 		defaultFont = new BitmapFont();

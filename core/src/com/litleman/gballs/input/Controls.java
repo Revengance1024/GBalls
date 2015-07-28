@@ -1,6 +1,7 @@
 package com.litleman.gballs.input;
 
 import com.badlogic.gdx.InputProcessor;
+import com.litleman.gballs.GBalls;
 
 /**
  * Created by andri on 28.07.2015.
@@ -9,7 +10,7 @@ public class Controls implements InputProcessor{
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-
+        GBalls.touch
         return true;
     }
 
