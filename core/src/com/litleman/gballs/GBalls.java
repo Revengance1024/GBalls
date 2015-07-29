@@ -35,7 +35,9 @@ public class GBalls extends ApplicationAdapter {
 	@Override
 	public void create () {
 		play = true;
+		touch = new Vector2(0, 0);
 		batch = new SpriteBatch();
+		shapes = new ShapeRenderer();
 		defaultFont = new BitmapFont();
 
 		camera = new OrthographicCamera();
@@ -49,10 +51,8 @@ public class GBalls extends ApplicationAdapter {
 
 
 		///FOR TESTING ONLY
-		shapes = new ShapeRenderer();
 		defaultBallTexture = new Texture(Gdx.files.internal("ball_base_256x256.png"));
 		ball = new Ball(100, 100, defaultBallTexture);
-		touch = new Vector2(0, 0);
 		///END TESTING
 	}
 
