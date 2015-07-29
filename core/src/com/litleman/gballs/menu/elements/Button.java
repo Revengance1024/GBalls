@@ -23,6 +23,11 @@ public class Button extends MenuObject {
 
     }
 
+    public void mirror(boolean x){
+        if(x)sprite.flip(true,false);
+        else sprite.flip(false,true);
+    }
+
 
 
 
