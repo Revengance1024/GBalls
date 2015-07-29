@@ -54,6 +54,7 @@ public class GBalls extends ApplicationAdapter {
 
 		///FOR TESTING ONLY
 		currentLevel = new Level("level.test", 30, 30);
+		currentLevel.prepare();
 		defaultBallTexture = new Texture(Gdx.files.internal("ball_base_256x256.png"));
 		ball = new Ball(100, 100, defaultBallTexture);
 		///END TESTING

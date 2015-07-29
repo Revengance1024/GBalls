@@ -15,7 +15,7 @@ import java.awt.geom.Line2D;
 /**
  * Created by andri on 28.07.2015.
  */
-public abstract class Tile {
+public class Tile {
 
     protected String id;
     protected Vector2 position;
