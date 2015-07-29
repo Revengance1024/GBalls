@@ -158,7 +158,7 @@ public class GBalls extends ApplicationAdapter {
 		return screenHeight;
 	}
 
-	public BitmapFont getDefaultFont(){
+	public static BitmapFont getDefaultFont(){
 		return defaultFont;
 	}
 

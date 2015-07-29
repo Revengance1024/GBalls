@@ -11,7 +11,7 @@ import com.badlogic.gdx.math.Vector2;
  */
 public class Label extends MenuObject {
     private String text;
-    private Vector2 position;
+    private Vector2 position=new Vector2();
     private BitmapFont font;
 
     public Label(String text,BitmapFont font,float positionX,float positionY){
