@@ -72,6 +72,10 @@ public class Slider extends MenuObject {
         else amount = maxAmount;
     }
 
+    public String getLabel(){
+        return label;
+    }
+
     public void subtract(){
         if(amount<=minAmount)amount--;
         else amount = minAmount;
