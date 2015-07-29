@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.litleman.gballs.GBalls;
+import com.litleman.gballs.graphics.Textures;
 
 /**
  * Created by Arturs on 7/29/15.
@@ -23,9 +24,6 @@ public class Slider extends MenuObject {
     int minAmount;
     private Vector2 position = new Vector2();
     private Vector2 dimension= new Vector2();
-    private final Texture button = new Texture(Gdx.files.internal("Slider1.png"));
-    private final Texture slideTexture = new Texture(Gdx.files.internal("Slider2.png"));
-    private final Texture railTexture = new Texture(Gdx.files.internal("Slider3.png"));
 
     public Slider(String label,
                   float positionX,
@@ -47,19 +45,19 @@ public class Slider extends MenuObject {
     }
 
     private void init(){
-        button1 = new Button(position.x,position.y,button.getWidth(),button.getHeight(),button);
-        button2 = new Button(position.x+dimension.x-button.getWidth(),position.y,button.getWidth(),button.getHeight(),button);
+        button1 = new Button(position.x,position.y,Textures.arrowButton.getWidth(),Textures.arrowButton.getHeight(),Textures.arrowButton);
+        button2 = new Button(position.x+dimension.x-Textures.arrowButton.getWidth(),position.y,Textures.arrowButton.getWidth(),Textures.arrowButton.getHeight(),Textures.arrowButton);
         button2.mirror(true);
-        rail = new Sprite(railTexture,
-                (int)position.x+button.getWidth(),
-                (int)position.y,(int)dimension.x - 2*button.getWidth(),
-                railTexture.getWidth());
-        int delta = (int)(amount*(dimension.x - 2*button.getWidth())/(maxAmount-minAmount));
-        slide = new Sprite(slideTexture,
-                (int)position.x+button.getWidth()+delta,
+        rail = new Sprite(Textures.railTexture,
+                (int)position.x+Textures.arrowButton.getWidth(),
+                (int)position.y,(int)dimension.x - 2*Textures.arrowButton.getWidth(),
+                Textures.railTexture.getWidth());
+        int delta = (int)(amount*(dimension.x - 2*Textures.arrowButton.getWidth())/(maxAmount-minAmount));
+        slide = new Sprite(Textures.slideTexture,
+                (int)position.x+Textures.arrowButton.getWidth()+delta,
                 (int)position.y,
-                slideTexture.getWidth(),
-                slideTexture.getHeight());
+                Textures.slideTexture.getWidth(),
+                Textures.slideTexture.getHeight());
     }
 
     public void add(){
