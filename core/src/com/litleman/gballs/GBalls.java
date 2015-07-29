@@ -13,6 +13,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.litleman.gballs.ball.Ball;
 import com.litleman.gballs.input.Controls;
+import com.litleman.gballs.levels.Level;
 
 public class GBalls extends ApplicationAdapter {
 	private static OrthographicCamera camera;
@@ -29,9 +30,10 @@ public class GBalls extends ApplicationAdapter {
 	private static int screenHeight;
 
 	private static Ball ball;
-	//private static Level currentLevel;
+	private static Level currentLevel;
 
 	private static Texture defaultBallTexture;
+
 	@Override
 	public void create () {
 		play = true;
@@ -51,6 +53,7 @@ public class GBalls extends ApplicationAdapter {
 
 
 		///FOR TESTING ONLY
+		currentLevel = new Level("level.test", 30, 30);
 		defaultBallTexture = new Texture(Gdx.files.internal("ball_base_256x256.png"));
 		ball = new Ball(100, 100, defaultBallTexture);
 		///END TESTING
@@ -92,9 +95,9 @@ public class GBalls extends ApplicationAdapter {
 		batch.begin();
 			if (play) {
 				ball.draw(Gdx.gl, batch);
-				//currentLevel.draw(Gdx.gl, batch);
+				currentLevel.draw(Gdx.gl, batch);
 			}else{
-
+				//TODO draw menu
 			}
 		batch.end();
 
@@ -126,8 +129,8 @@ public class GBalls extends ApplicationAdapter {
 
 	}
 
-	private static boolean collisionCheck(){
-		return false;
+	private static boolean collisionCheck(){	//return false if nothing is hit
+		return currentLevel.collisionCheck(ball);
 	}
 
 	private static void updateMenu(){
@@ -147,7 +150,7 @@ public class GBalls extends ApplicationAdapter {
 	}
 
 	public static void ballInteract(float x, float y){
-		ball.interact(x, y);
+		ball.interact(x, y, 1);
 	}
 
 	public static int getScreenWidth(){
