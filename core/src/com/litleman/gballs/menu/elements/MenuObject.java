@@ -9,10 +9,11 @@ import com.badlogic.gdx.math.Vector2;
  */
 public abstract class MenuObject {
     private Vector2 position= new Vector2();
-
+    private Vector2 dimension= new Vector2();
     public abstract void draw(GL20 x, SpriteBatch y);
 
     public Vector2 getPosition(){
         return position;
     }
+    public Vector2 getSize(){return dimension;}
 }

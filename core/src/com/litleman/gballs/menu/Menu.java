@@ -29,6 +29,10 @@ public class Menu {
 
     }
 
+    public String getLabel(){
+        return label;
+    }
+
     public void add(MenuObject object){
         objects.add(index, object);
         index++;
