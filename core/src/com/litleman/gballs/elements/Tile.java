@@ -1,5 +1,6 @@
 package com.litleman.gballs.elements;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -8,9 +9,10 @@ import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.litleman.gballs.ball.Ball;
+import com.litleman.gballs.elements.shapes.Line;
 import com.litleman.gballs.graphics.Textures;
 
-import java.awt.geom.Line2D;
+import java.util.Arrays;
 
 /**
  * Created by andri on 28.07.2015.
@@ -20,7 +22,8 @@ public class Tile {
     protected String id;
     protected Vector2 position;
     protected Vector2 coordinates;
-    protected Line2D[] sides;               //1-N, 2-E, 3-S, 4-W
+    protected Rectangle bounds;
+    protected Line[] sides;               //1-N, 2-E, 3-S, 4-W
     protected Sprite texture;
 
     protected boolean solid = true;
@@ -40,14 +43,17 @@ public class Tile {
         this.solid = solid;
         this.hardness = hardness;
         this.bounce = bounce;
-        this.texture = new Sprite(texture, Math.round(Ball.BALL_RADIUS), Math.round(Ball.BALL_RADIUS));
+        this.texture = new Sprite(texture);
+        this.texture.setSize(2 * Ball.BALL_RADIUS, 2 * Ball.BALL_RADIUS);
 
         coordinates = new Vector2(x*(2*Ball.BALL_RADIUS), y*(2*Ball.BALL_RADIUS));
-        sides = new Line2D[4];
-        sides[0] = new Line2D.Float(coordinates.x, coordinates.y+(2*Ball.BALL_RADIUS), coordinates.x+(2*Ball.BALL_RADIUS), coordinates.y+(2*Ball.BALL_RADIUS));
-        sides[1] = new Line2D.Float(coordinates.x+(2*Ball.BALL_RADIUS), coordinates.y+(2*Ball.BALL_RADIUS), coordinates.x+(2*Ball.BALL_RADIUS), coordinates.y);
-        sides[2] = new Line2D.Float(coordinates.x+(2*Ball.BALL_RADIUS), coordinates.y, coordinates.x, coordinates.y);
-        sides[3] = new Line2D.Float(coordinates.x, coordinates.y, coordinates.x, coordinates.y+(2*Ball.BALL_RADIUS));
+        this.bounds = new Rectangle(coordinates.x, coordinates.y, (2*Ball.BALL_RADIUS), (2*Ball.BALL_RADIUS));
+        this.texture.setPosition(coordinates.x, coordinates.y);
+        sides = new Line[4];
+        sides[0] = new Line(coordinates.x, coordinates.y+(2*Ball.BALL_RADIUS), coordinates.x+(2*Ball.BALL_RADIUS), coordinates.y+(2*Ball.BALL_RADIUS));
+        sides[1] = new Line(coordinates.x+(2*Ball.BALL_RADIUS), coordinates.y+(2*Ball.BALL_RADIUS), coordinates.x+(2*Ball.BALL_RADIUS), coordinates.y);
+        sides[2] = new Line(coordinates.x+(2*Ball.BALL_RADIUS), coordinates.y, coordinates.x, coordinates.y);
+        sides[3] = new Line(coordinates.x, coordinates.y, coordinates.x, coordinates.y+(2*Ball.BALL_RADIUS));
     }
 
     public boolean isSolid(){
@@ -62,6 +68,10 @@ public class Tile {
         return this.bounce;
     }
 
+    public String getId(){
+        return id;
+    }
+
     public Vector2 getPosition(){
         return position;
     }
@@ -71,37 +81,58 @@ public class Tile {
     }
 
     public boolean onHit(Ball ball){       //returns false if destroyed
+        Gdx.app.debug("GBALLS", "HIT");
         if(!hit) {
-            if (solid) {
-                int sideHit = getSideHit(ball);
-                if (sideHit == 1 || sideHit == 3) {
-                    hit = true;
-                    ball.interact(bounce, -bounce, 2);
-                } else if (sideHit == 2 || sideHit == 4) {
-                    hit = true;
-                    ball.interact(-bounce, bounce, 2);
-                }
-            }
-            if(hardness >= 0.0f){
+            if (hardness >= 0.0f) {
                 float damage;
-                if(hardness == 0.0f)damage = health;
-                else damage = ball.getPower();
+                if (hardness == 0.0f) damage = health;
+                else damage = ball.getPower()/hardness;
                 health -= damage;
             }
+
+        }
+        if (solid) {
+            int side = getSideTouch(ball);
+            if(side == 1){
+                if(ball.getYVelocity() < 0){
+                    ball.rebound(bounce, -bounce);
+                }
+            }else if(side == 3){
+                if(ball.getYVelocity() > 0){
+                    ball.rebound(bounce, -bounce);
+                }
+            }else if(side == 2){
+                if(ball.getXVelocity() < 0){
+                    ball.rebound(-bounce, bounce);
+                }
+            }else if(side == 4){
+                if(ball.getXVelocity() > 0){
+                    ball.rebound(-bounce, bounce);
+                }
+            }
+        }else{
+            if(!hit)
+            ball.rebound(bounce, bounce);
         }
 
         if(health <= 0)return false;
         else return true;
     }
 
-    public int getSideHit(Ball ball){
-        for(int i = 0; i < 4; i++){
-            if(Ball.BALL_RADIUS <= Intersector.distanceLinePoint(Math.round(sides[i].getX1()), Math.round(sides[i].getY1()),
-                    Math.round(sides[i].getX2()), Math.round(sides[i].getY2()), ball.getX() + Ball.BALL_RADIUS, ball.getY() + Ball.BALL_RADIUS)){
-                return i+1;
+    public int getSideTouch(Ball ball){
+        if(Math.abs(ball.getX()-coordinates.x) > Math.abs(ball.getY()-coordinates.y)){
+            if(ball.getX() > coordinates.x){
+                return 2;
+            }else{
+                return 4;
+            }
+        }else{
+            if(ball.getY() > coordinates.y){
+                return 1;
+            }else{
+                return 3;
             }
         }
-        return 0;
     }
 
     public void clearHit(){
@@ -109,10 +140,10 @@ public class Tile {
     }
 
     public Rectangle getBounds(){
-        return new Rectangle(coordinates.x, coordinates.y, (2*Ball.BALL_RADIUS), (2*Ball.BALL_RADIUS));
+        return bounds;
     }
 
     public void draw(GL20 gl, SpriteBatch batch){
-
+        texture.draw(batch);
     }
 }

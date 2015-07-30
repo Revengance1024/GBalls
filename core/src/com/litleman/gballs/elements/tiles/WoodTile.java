@@ -9,7 +9,7 @@ import com.litleman.gballs.graphics.Textures;
 public class WoodTile extends Tile{
 
     public WoodTile(int x, int y) {
-        super("tile.wood", x, y, true, 1.0f, 0.5f, Textures.woodTile);
+        super("tile.wood", x, y, true, 2.0f, 0.5f, Textures.woodTile);
     }
 
 

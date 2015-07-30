@@ -1,9 +1,11 @@
 package com.litleman.gballs.levels;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Intersector;
+import com.litleman.gballs.GBalls;
 import com.litleman.gballs.ball.Ball;
 import com.litleman.gballs.elements.Tile;
 import com.litleman.gballs.elements.Wall;
@@ -33,7 +35,9 @@ public class Level {
         this.walls = new ArrayList<>();
     }
 
-    public void addTile(Tile tile, int xPos, int yPos){
+    public void addTile(Tile tile){
+        int xPos = (int)tile.getPosition().x;
+        int yPos = (int)tile.getPosition().y;
         if(xPos < width && yPos < height)
             tiles[(yPos*width)+xPos] = tile;
     }
@@ -55,7 +59,7 @@ public class Level {
     public void draw(GL20 gl, SpriteBatch batch){
         for(int i = 0; i < width; i++){
             for(int j = 0; j < height; j++) {
-                if (tiles[j*width+i] == null) {
+                if (tiles[j*width+i] != null) {
                     tiles[j*width+i].draw(gl, batch);
                 }
             }
@@ -67,8 +71,13 @@ public class Level {
         for(int i = 0; i < width; i++){
             for(int j = 0; j < height; j++) {
                 if(Intersector.overlaps(ball.getBounds(), tiles[j * width + i].getBounds())){
-                    tiles[j * width + i].onHit(ball);
+                    if(!tiles[j * width + i].onHit(ball)) {
+                        GBalls.toDisplay = "HIT";
+                        tiles[j * width + i] = new AirTile(i, j);
+                    }
                     if(tiles[j * width + i].isSolid())hit = true;
+                }else{
+                    tiles[j * width + i].clearHit();
                 }
             }
         }

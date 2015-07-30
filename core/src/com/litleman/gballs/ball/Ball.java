@@ -14,6 +14,9 @@ import com.litleman.gballs.GBalls;
 public class Ball {
 
     public static float BALL_RADIUS = 16;
+    public static float DEFAULT_FORCE_MODIFIER = 0.025f;
+    public static float MAX_VELOCITY = 30.0f;
+    public static float MIN_VELOCITY = 1.0f;
 
     private Vector2 position;
     private Vector2 velocity;
@@ -27,6 +30,7 @@ public class Ball {
         velocity = new Vector2(0f, 0f);
 
         sprite = new Sprite(texture);
+        sprite.setSize(2*BALL_RADIUS, 2*BALL_RADIUS);
         power = 100.0f;
     }
 
@@ -42,35 +46,46 @@ public class Ball {
         return position.y;
     }
 
+    public float getXVelocity(){
+        return velocity.x;
+    }
+
+    public float getYVelocity(){
+        return velocity.y;
+    }
+
     public float getPower(){
         return power;
     }
 
-    public void update(){
-        position.add(velocity.x, velocity.y);
-        if(position.x <= 0 || (position.x+(2*BALL_RADIUS)) >= GBalls.getScreenWidth()){
-            velocity.x *= -1;
+    public void update(float gameSpeed){
+        if(velocity.len() < MIN_VELOCITY){
+            velocity.x = 0;
+            velocity.y = 0;
         }
-        if(position.y <= 0 || (position.y+(2*BALL_RADIUS)) >= GBalls.getScreenHeight()){
-            velocity.y *= -1;
+        position.add(velocity.x*gameSpeed, velocity.y*gameSpeed);
+        if(position.x <= -20.0f || (position.x+(2*BALL_RADIUS)) >= 980.0f || position.y <= -20.0f || (position.y+(2*BALL_RADIUS)) >= 980.0f){
+            move(100, 100);
         }
     }
 
-    public void interact(float xForce, float yForce, int type){     //1-add, 2-multiply
-        switch (type){
-            case 1:
-                velocity.add(xForce*0.01f, yForce*0.01f);
-            break;
-            case 2:
-                velocity.x *= xForce;
-                velocity.y *= yForce;
-            break;
+    public void move(float x, float y){
+        position.x = x;
+        position.y = y;
+    }
 
-        }
+    public void rebound(float xMultiply, float yMultiply){
+        velocity.x *= xMultiply;
+        velocity.y *= yMultiply;
+    }
+
+    public void interact(float xForce, float yForce){
+        velocity.add(xForce*DEFAULT_FORCE_MODIFIER, yForce*DEFAULT_FORCE_MODIFIER);
+        if(velocity.x > MAX_VELOCITY)velocity.x = MAX_VELOCITY;
+        if(velocity.y > MAX_VELOCITY)velocity.y = MAX_VELOCITY;
     }
 
     public void draw(GL20 gl, SpriteBatch batch){
-        sprite.setSize((2*BALL_RADIUS), (2*BALL_RADIUS));
         sprite.setPosition(position.x, position.y);
         sprite.draw(batch);
     }

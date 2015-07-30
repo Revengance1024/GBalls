@@ -9,7 +9,7 @@ import com.litleman.gballs.graphics.Textures;
 public class AirTile extends Tile {
 
     public AirTile(int x, int y) {
-        super("tile.air", x, y, false, -1.0f, 1.0f, Textures.airTile);
+        super("tile.air", x, y, false, -1.0f, 0.995f, Textures.airTile);
     }
 
 
